@@ -1,6 +1,7 @@
 import { db } from "@/lib/supabase";
 import { nowDemo } from "@/lib/clock";
 import { setStatus } from "@/lib/status";
+import { draftEscalations } from "@/lib/escalate";
 
 export async function GET() {
   const now = await nowDemo();
@@ -23,6 +24,20 @@ export async function GET() {
     if (status !== c.status) {
       await setStatus(c.id, status);
       changes.push(`${c.id}: ${c.status} -> ${status}`);
+    }
+
+    // Level 1 at breach, then +1 level every 48h overdue (max 4)
+    if (["SLA_BREACHED", "ESCALATED"].includes(status) && c.sla_deadline) {
+      const overdueH = (now.getTime() - new Date(c.sla_deadline).getTime()) / 3600000;
+      const target = Math.min(4, 1 + Math.floor(Math.max(0, overdueH) / 48));
+      const made = await draftEscalations(c, target);
+      if (made.length) {
+        changes.push(`${c.id}: drafted letter level ${made.join(",")}`);
+        if (status === "SLA_BREACHED") {
+          await setStatus(c.id, "ESCALATED");
+          changes.push(`${c.id}: SLA_BREACHED -> ESCALATED`);
+        }
+      }
     }
   }
   return Response.json({ now, changes });
