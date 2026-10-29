@@ -1,0 +1,56 @@
+{
+  "_readme": "Saved AI answers so the demo works even if the API is slow or down. Keys starting with _ are ignored. Entries marked PLACEHOLDER are examples: run `npm run build-cache` with your real demo photos to replace them with real answers.",
+  "analyze": {
+    "default": {
+      "_note": "PLACEHOLDER - used only if ALLOW_DEFAULT_CACHE=true and AI is down",
+      "is_garbage": true,
+      "severity": 3,
+      "description": "A large pile of mixed household garbage dumped at the roadside, partly spilling onto the road.",
+      "confidence": 80,
+      "visible_context": "roadside"
+    },
+    "demo_garbage_school": {
+      "_note": "PLACEHOLDER - replace via build-cache",
+      "is_garbage": true,
+      "severity": 4,
+      "description": "Overflowing garbage heap on the footpath next to a boundary wall, spreading onto the road.",
+      "confidence": 85,
+      "visible_context": "near school gate"
+    },
+    "demo_garbage1": {
+      "is_garbage": true,
+      "severity": 3,
+      "description": "A large metal garbage bin is overflowing with plastic waste and bags. Additional trash is scattered on the ground in an open grassy area.",
+      "confidence": 95,
+      "visible_context": "open ground with vegetation"
+    },
+    "db5240fb2474149694b32e4622b75dd278d3193686c087b4b6b6368b109d0205": {
+      "is_garbage": true,
+      "severity": 3,
+      "description": "A large metal garbage bin is overflowing with plastic waste and bags. Additional trash is scattered on the ground in an open grassy area.",
+      "confidence": 95,
+      "visible_context": "open ground with vegetation"
+    }
+  },
+  "verify": {
+    "demo_pair_notfixed_sneaky": {
+      "same_location": "yes",
+      "verdict": "not_fixed",
+      "confidence": 100,
+      "reason": "The location is identical as confirmed by the tree trunk, wall segments, and specific markings on the green dumpster. The trash remains piled high around and inside the dumpster in both photos."
+    },
+    "demo_pair_fixed_cleaned": {
+      "_note": "PLACEHOLDER - replace via build-cache",
+      "same_location": "yes",
+      "verdict": "fixed",
+      "confidence": 90,
+      "reason": "The same wall and footpath appear in both photos and the garbage pile has been cleared in the after photo."
+    },
+    "4433854e8e43d3feba2896ea34288bb2c1443828ebab950d6c612e6305bf0313:16116d0b27019e12194e3b5c642db991b77fd42a3d01d2e884e121b2989de14a": {
+      "same_location": "yes",
+      "verdict": "not_fixed",
+      "confidence": 100,
+      "reason": "The location is identical as confirmed by the tree trunk, wall segments, and specific markings on the green dumpster. The trash remains piled high around and inside the dumpster in both photos."
+    }
+  }
+}
