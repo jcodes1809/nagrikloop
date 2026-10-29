@@ -38,7 +38,7 @@ export async function draftEscalations(c: any, target: number, opts: Opts = {}):
   const day = 86400000;
   const filed = new Date(c.created_at ?? now).getTime();
   const deadline = c.sla_deadline ? new Date(c.sla_deadline).getTime() : now.getTime();
-  const from = (c.escalation_level ?? 0) + 1;
+  const { data: ex } = await db.from("escalations").select("level").eq("complaint_id", c.id); const from = Math.max(c.escalation_level ?? 0, ...(ex ?? []).map((r: any) => r.level)) + 1;
   const made: number[] = [];
 
   for (let level = from; level <= target; level++) {
@@ -72,7 +72,7 @@ export async function draftEscalations(c: any, target: number, opts: Opts = {}):
     const { error } = await db.from("escalations").insert({
       complaint_id: c.id, level, language, tone, letter, approved: false,
     });
-    if (!error) made.push(level);
+    if (error) console.error("[escalate] insert failed:", error.message); else made.push(level);
   }
   if (made.length) {
     await db.from("complaints").update({ escalation_level: Math.max(...made) }).eq("id", c.id);
