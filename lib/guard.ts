@@ -1,9 +1,8 @@
-// Lets through: the cron (Bearer secret), ?key=secret for manual testing,
-// and the portal's own buttons (same-origin browser requests).
-// Demo-grade protection, not bank-grade.
+// Guard is OFF unless ENFORCE_GUARD=1 is set. The secret alone no longer locks anything.
 export function checkAccess(req: Request): Response | null {
+  if (process.env.ENFORCE_GUARD !== "1") return null;
   const secret = process.env.CRON_SECRET;
-  if (!secret) return null; // not configured, so open (local dev)
+  if (!secret) return null;
   if (req.headers.get("authorization") === `Bearer ${secret}`) return null;
   if (new URL(req.url).searchParams.get("key") === secret) return null;
   if (req.headers.get("sec-fetch-site") === "same-origin") return null;
