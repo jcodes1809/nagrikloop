@@ -60,7 +60,7 @@ export async function draftEscalations(c: any, target: number, opts: Opts = {}):
           language,
           false_closure: opts.falseClosure === true,
         }),
-        12000
+        30000
       );
       letter = out.letter_text;
       tone = out.tone ?? tone;
