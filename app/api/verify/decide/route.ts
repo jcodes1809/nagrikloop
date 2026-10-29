@@ -14,6 +14,7 @@ export async function POST(req: Request) {
 
   const { data: c } = await db.from("complaints").select("*").eq("id", b.complaint_id).maybeSingle();
   if (!c) return Response.json({ error: "complaint not found" }, { status: 404 });
+  if (c.status !== "RESOLVED_PENDING_VERIFICATION") return Response.json({ error: `cannot decide while status is ${c.status}` }, { status: 409 });
 
   const { data: v } = await db
     .from("verifications").select("id")

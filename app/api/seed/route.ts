@@ -15,15 +15,15 @@ export async function GET() {
   }
 
   const seeds = [
-    { portal: "GHMC-SEED001", ward: "LB Nagar", desc: "Garbage pile near primary school", status: "ACKNOWLEDGED", portalStatus: "ACKNOWLEDGED", deadlineH: 60 },
-    { portal: "GHMC-SEED002", ward: "Dilsukhnagar", desc: "Overflowing bin, not cleared for days", status: "SLA_BREACHED", portalStatus: "ACKNOWLEDGED", deadlineH: -5 },
-    { portal: "GHMC-SEED003", ward: "Kothapet", desc: "Garbage dumped by the roadside", status: "RESOLVED_PENDING_VERIFICATION", portalStatus: "RESOLVED", deadlineH: -20 },
+    { portal: "GHMC-SEED001", ward: "LB Nagar", lat: 17.3457, lng: 78.5522, desc: "Garbage pile near primary school", status: "ACKNOWLEDGED", portalStatus: "ACKNOWLEDGED", deadlineH: 60 },
+    { portal: "GHMC-SEED002", ward: "Dilsukhnagar", lat: 17.3688, lng: 78.5247, desc: "Overflowing bin, not cleared for days", status: "SLA_BREACHED", portalStatus: "ACKNOWLEDGED", deadlineH: -5 },
+    { portal: "GHMC-SEED003", ward: "Kothapet", lat: 17.3616, lng: 78.5500, desc: "Garbage dumped by the roadside", status: "RESOLVED_PENDING_VERIFICATION", portalStatus: "RESOLVED", deadlineH: -20 },
   ];
 
   const out: string[] = [];
   for (const s of seeds) {
     const { data: c, error } = await db.from("complaints").insert({
-      ward: s.ward,
+      ward: s.ward, lat: s.lat, lng: s.lng,
       category: "garbage",
       severity: "high",
       description: s.desc,
