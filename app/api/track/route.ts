@@ -2,8 +2,12 @@ import { db } from "@/lib/supabase";
 import { nowDemo } from "@/lib/clock";
 import { setStatus } from "@/lib/status";
 import { draftEscalations } from "@/lib/escalate";
+import { checkAccess } from "@/lib/guard";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const denied = checkAccess(req);
+  if (denied) return denied;
+
   const now = await nowDemo();
   const { data: list } = await db
     .from("complaints").select("*")
@@ -26,7 +30,6 @@ export async function GET() {
       changes.push(`${c.id}: ${c.status} -> ${status}`);
     }
 
-    // Level 1 at breach, then +1 level every 48h overdue (max 4)
     if (["SLA_BREACHED", "ESCALATED"].includes(status) && c.sla_deadline) {
       const overdueH = (now.getTime() - new Date(c.sla_deadline).getTime()) / 3600000;
       const target = Math.min(4, 1 + Math.floor(Math.max(0, overdueH) / 48));
