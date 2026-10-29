@@ -2,7 +2,10 @@ import { db } from "@/lib/supabase";
 import { setStatus } from "@/lib/status";
 import { draftEscalations } from "@/lib/escalate";
 
-// Body: { complaint_id, decision: "accept" | "reject" }
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
+// Body: { complaint_id, decision: "accept" | "reject", language?: "en" | "hi" | "te" }
 export async function POST(req: Request) {
   const b = await req.json();
   if (!b.complaint_id || !["accept", "reject"].includes(b.decision)) {
@@ -25,7 +28,10 @@ export async function POST(req: Request) {
 
   await setStatus(c.id, "REOPENED");
   await db.from("portal_complaints").update({ status: "ACKNOWLEDGED" }).eq("complaint_id", c.id);
-  await draftEscalations(c, Math.min(4, (c.escalation_level ?? 0) + 1));
+  await draftEscalations(c, Math.min(4, (c.escalation_level ?? 0) + 1), {
+    language: b.language,
+    falseClosure: true, // letter mentions the photo evidence that the issue persists
+  });
   await setStatus(c.id, "ESCALATED");
   return Response.json({ ok: true, status: "ESCALATED" });
 }

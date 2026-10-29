@@ -4,6 +4,9 @@ import { setStatus } from "@/lib/status";
 import { draftEscalations } from "@/lib/escalate";
 import { checkAccess } from "@/lib/guard";
 
+export const runtime = "nodejs";
+export const maxDuration = 60; // AI letters can take a few seconds
+
 export async function GET(req: Request) {
   const denied = checkAccess(req);
   if (denied) return denied;
